@@ -1,5 +1,5 @@
 {
-    "name": "rephp/crontab-manager",
+    "name": "rephp/rephp-crontab",
     "description": "crontab统一管理",
     "license": "Apache-2.0",
     "authors": [
