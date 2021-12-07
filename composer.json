@@ -1,0 +1,24 @@
+{
+    "name": "rephp/crontab-manager",
+    "description": "crontab统一管理",
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "sam.shi",
+            "email": "32320811@qq.com"
+        }
+    ],
+    "require": {
+    	"php": ">=5.6.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "rephp\\crontabManager\\": "./src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "demo\\": "./demo/"
+        }
+    }
+}
