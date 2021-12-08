@@ -42,7 +42,6 @@ class crontabRunner
      */
     public static function doShellCommand($command, $logDir = '', $systemLog = true, $progressNum=1)
     {
-        //
         $logFile = self::getLogFile($logDir);
         $systemLog && file_put_contents($logFile, '[' . date('Y-m-d H:i:s') . '] 执行: ' . $command . "\n", FILE_APPEND);
         $fullCommand = 'count=$(ps aux |grep -E "'.$command.'$" | wc -l); if [ $count -lt '.$progressNum.' ]; then for i in $(seq $(expr '.$progressNum.' - $count)); do '.$command.' >> '.$logFile.' 2>&1 & done ;fi';
