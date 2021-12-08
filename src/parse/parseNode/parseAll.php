@@ -1,12 +1,12 @@
 <?php
 
-namespace rephp\crontabManager\parse\parseNode;
+namespace rephp\crontab\parse\parseNode;
 
-use rephp\crontabManager\interfaces\parseScheduleNodeInterface;
+use rephp\crontab\interfaces\parseScheduleNodeInterface;
 
 /**
  * 解析通配符节点
- * @package rephp\crontabManager\parse\parseNode
+ * @package rephp\crontab\parse\parseNode
  */
 class parseAll implements parseScheduleNodeInterface
 {
@@ -15,11 +15,12 @@ class parseAll implements parseScheduleNodeInterface
      * @param string $scheduleNodeStr  节点字符串
      * @param int    $currentTimeValue 节点对应当前时间
      * @param int    $every            频率
+     * @param int  $scheduleNodeInterval  当前节点所经历的时间段间隔
      * @return bool
      */
-    public function isDo($scheduleNodeStr, $currentTimeValue, $every = 0)
+    public function isDo($scheduleNodeStr, $currentTimeValue, $every = 0, $scheduleNodeInterval=0)
     {
-        return empty($every) ? true : ($currentTimeValue % $every == 0);
+        return empty($every) ? true : ($scheduleNodeInterval % $every == 0);
     }
 
 }

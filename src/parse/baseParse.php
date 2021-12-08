@@ -1,5 +1,5 @@
 <?php
-namespace rephp\crontabManager\parse;
+namespace rephp\crontab\parse;
 
 /**
  * 解析基类

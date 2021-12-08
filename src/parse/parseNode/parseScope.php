@@ -1,12 +1,12 @@
 <?php
 
-namespace rephp\crontabManager\parse\parseNode;
+namespace rephp\crontab\parse\parseNode;
 
-use rephp\crontabManager\interfaces\parseScheduleNodeInterface;
+use rephp\crontab\interfaces\parseScheduleNodeInterface;
 
 /**
  * 解析范围节点
- * @package rephp\crontabManager\parse\parseNode
+ * @package rephp\crontab\parse\parseNode
  */
 class parseScope implements parseScheduleNodeInterface
 {
@@ -15,11 +15,12 @@ class parseScope implements parseScheduleNodeInterface
      * @param string $scheduleNodeStr  节点字符串
      * @param int    $currentTimeValue 节点对应当前时间
      * @param int    $every            频率
+     * @param int    $scheduleNodeInterval  当前节点所经历的时间段间隔
      * @return bool
      */
-    public function isDo($scheduleNodeStr, $currentTimeValue, $every = 0)
+    public function isDo($scheduleNodeStr, $currentTimeValue, $every = 0, $scheduleNodeInterval=0)
     {
-        return empty($every) ? self::isDoWithNoEvery($scheduleNodeStr, $currentTimeValue) : self::isDoWithEvery($scheduleNodeStr, $currentTimeValue, $every);
+        return empty($every) ? self::isDoWithNoEvery($scheduleNodeStr, $currentTimeValue) : self::isDoWithEvery($scheduleNodeStr, $currentTimeValue, $every, $scheduleNodeInterval);
     }
 
     /**
@@ -44,14 +45,15 @@ class parseScope implements parseScheduleNodeInterface
      * @param string $scheduleNodeStr  节点字符串
      * @param int    $currentTimeValue 节点对应当前时间
      * @param int    $every            频率
+     * @param int    $scheduleNodeInterval  当前节点所经历的时间段间隔
      * @return bool
      */
-    final private static function isDoWithEvery($scheduleNodeStr, $currentTimeValue, $every)
+    final private static function isDoWithEvery($scheduleNodeStr, $currentTimeValue, $every, $scheduleNodeInterval=0)
     {
         $res      = false;
         $rangeArr = explode('-', $scheduleNodeStr);
         if ($currentTimeValue >= $rangeArr[0] && $currentTimeValue <= $rangeArr[1]) {
-            $res = ($currentTimeValue % $every == 0);
+            $res = ($scheduleNodeInterval % $every == 0);
         }
 
         return $res;

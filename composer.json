@@ -13,7 +13,7 @@
     },
     "autoload": {
         "psr-4": {
-            "rephp\\crontabManager\\": "./src/"
+            "rephp\\crontab\\": "./src/"
         }
     },
     "autoload-dev": {

@@ -1,6 +1,6 @@
 <?php
 
-namespace rephp\crontabManager\query;
+namespace rephp\crontab\query;
 
 /**
  * 运行可执行任务
@@ -41,7 +41,7 @@ class crontabRunner
     {
         $logFile = self::getLogFile($logDir);
         $systemLog && file_put_contents($logFile, '[' . date('Y-m-d H:i:s') . '] 执行: ' . $command . "\n", FILE_APPEND);
-        $command .= ' > ' . $logFile . ' 2>&1';
+        $command .= ' >> ' . $logFile . ' 2>&1';
         return system($command);
     }
 
@@ -58,12 +58,10 @@ class crontabRunner
         $logDir = str_replace('\\', '/', $logDir);
         substr($logDir, -1) == '/' || $logDir .= '/';
         $logDir .= date('Y/m/d/', time());
-        //获取绝对路径地址
-        $logDir = realpath($logDir);
         //自动创建目录
         self::createLogDir($logDir);
 
-        return $logDir . 'crontab.log';
+        return realpath($logDir) . '/crontab.log';
     }
 
     /**

@@ -1,10 +1,36 @@
 <?php
-namespace rephp\crontabManager;
+namespace rephp\crontab;
 
-use rephp\crontabManager\parse\parseTask;
-use rephp\crontabManager\query\crontabRunner;
+use rephp\crontab\parse\parseTask;
+use rephp\crontab\query\crontabRunner;
 
-class crontabManager
+/**
+ * 计划任务执行客户端
+ * $taskList = [
+ *  [
+ *      'desc'       => '每分钟执行一次测试任务',//任务说明,选填
+ *      'schedule'   => '* * * * *',//执行时间计划,参数说明同linux crontab，必填
+ *      'command'    => 'test/test2 444 154',//执行命令,必填
+ *      'log_dir'    => 'e:/logs/',//日志存放目录，选填
+ *      'is_sys_log' => false,//是否开启系统运行日志，选填
+ *      'start_time' => '2021-12-08 12:00:00',//必填
+ *  ],
+ *  [
+ *      'desc'     => '每小时的第5分钟执行一次任务',//任务说明,选填
+ *      'schedule' => '5 * * * *',//执行时间计划,参数说明同linux crontab，必填
+ *      'command'=>'echo "demo"',//执行命令,必填
+ *      'log_dir' => 'e:/logs/',//日志存放目录，选填
+ *      'is_sys_log' => true,//是否开启系统运行日志，选填
+ *      'start_time' => '2021-12-08 12:00:00',//必填
+ *  ]
+ * ];
+ * $test = new \rephp\crontab\client('/usr/bin/php index.php');
+ * $res = $test->add($taskList)->run();
+ * var_dump($res);exit;
+ *
+ * @package rephp\crontab
+ */
+class client
 {
     /**
      * @var array $taskList 任务列表
@@ -33,24 +59,24 @@ class crontabManager
      * @example
      *       [
      *          [
-     *          'desc'       => '每分钟执行一次测试任务',
-     *          'schedule'   => '* * * * *',
-     *          'command'    => 'test/test2 444 154',
-     *          'log_dir'    => '/var/logs/'
-     *          'is_sys_log' => false,
+     *              'desc'       => '每分钟执行一次测试任务',
+     *              'schedule'   => '* * * * *',
+     *              'command'    => 'test/test2 444 154',
+     *              'log_dir'    => '/var/logs/',
+     *              'is_sys_log' => false,
      *          ],
      *          [
-     *          'desc'     => '每小时的第5分钟执行一次任务',
-     *          'schedule' => '5 * * * *',
-     *          'command'=>'echo "demo"',
-     *          'log_dir' => '/var/logs/'
-     *          'is_sys_log' => true,
+     *              'desc'       => '每小时的第5分钟执行一次任务',
+     *              'schedule'   => '5 * * * *',
+     *              'command'    => 'echo "demo"',
+     *              'log_dir'    => '/var/logs/',
+     *              'is_sys_log' => true,
      *          ]
      *      ];
      */
     public function add($taskList)
     {
-        if (empty($job)) {
+        if (empty($taskList)) {
             return $this;
         }
         //判断本次添加的是一个还是多个job
