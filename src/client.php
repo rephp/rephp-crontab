@@ -15,6 +15,7 @@ use rephp\crontab\query\crontabRunner;
  *      'is_sys_log' => false,//是否开启系统运行日志，选填
  *      'start_time' => '2021-12-08 12:00:00',//必填
  *      'num'        => 4,//运行进程数，选填，默认为1
+ *      'status'     => true,//运行状态，选填，默认为暂停。false=暂停，true=执行中
  *  ],
  *  [
  *      'desc'     => '每小时的第5分钟执行一次任务',//任务说明,选填
@@ -24,6 +25,7 @@ use rephp\crontab\query\crontabRunner;
  *      'is_sys_log' => true,//是否开启系统运行日志，选填
  *      'start_time' => '2021-12-08 12:00:00',//必填
  *      'num'        => 2,//运行进程数，选填，默认为1
+ *      'status'     => true,//运行状态，选填，默认为暂停。false=暂停，true=执行中
  *  ]
  * ];
  * $test = new \rephp\crontab\client('/usr/bin/php index.php');
@@ -84,7 +86,7 @@ class client
         //判断本次添加的是一个还是多个job
         (count($taskList) == count($taskList, 1)) && $taskList = [$taskList];
         foreach ($taskList as $task) {
-            if(empty($task['schedule']) || empty($task['command'])){
+            if(empty($task['schedule']) || empty($task['command']) || empty($cron['start_time'])){
                 continue;
             }
             $task['schedule'] = preg_replace('/\s(?=\s)/', '\\1', $task['schedule']);
@@ -103,8 +105,7 @@ class client
     {
         try{
             //汇总任务列表
-            empty($taskList) && $taskList = $this->taskList;
-            (count($taskList) == count($taskList, 1)) && $taskList = [$taskList];
+            $taskList = empty($taskList) ? $this->taskList : $this->filterTaskList($taskList);
             if(empty($taskList)){
                 throw new \Exception('current no task', 200);
             }
@@ -117,6 +118,32 @@ class client
             $result = crontabRunner::runTask($doTaskList, $this->baseRunScript);
         }catch (\Exception $e){
             $result = ['code'=>$e->getCode(), 'msg'=>$e->getMessage()];
+        }
+
+        return $result;
+    }
+
+    /**
+     * 过滤无效任务,获得初步有效任务
+     * @param array $taskList  任务列表，支持单个任务和批量任务
+     * @return array
+     */
+    public function filterTaskList(array $taskList)
+    {
+        (count($taskList) == count($taskList, 1)) && $taskList = [$taskList];
+        $result = [];
+        $currentTime = time();
+        foreach ($taskList as $task) {
+            if( (isset($task['status']) && empty($task['status'])) || empty($task['schedule']) || empty($task['command']) || empty($cron['start_time'])){
+                continue;
+            }
+            //时间范围之内
+            $startTime = strtotime($cron['start_time']);
+            if($currentTime<$startTime){
+                continue;
+            }
+            $task['schedule'] = preg_replace('/\s(?=\s)/', '\\1', $task['schedule']);
+            $result[] = $task;
         }
 
         return $result;

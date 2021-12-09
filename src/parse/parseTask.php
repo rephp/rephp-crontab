@@ -16,9 +16,6 @@ class parseTask extends baseParse
     {
         $taskListNew = [];
         foreach ($taskList as $cron) {
-            if (empty($cron['schedule']) || empty($cron['command']) || empty($cron['start_time'])) {
-                continue;
-            }
             $isDo = self::getScheduleIsDo($cron['schedule'], strtotime($cron['start_time']));
             //汇总统计结果
             $isDo && $taskListNew[] = $cron;
@@ -35,10 +32,7 @@ class parseTask extends baseParse
      */
     protected static function getScheduleIsDo($schedule = '', $startTime=0)
     {
-        $time = time();
-        if($time<$startTime){
-            return false;
-        }
+        $time            = time();
         $interval        = $time - $startTime;
         $schedule        = preg_replace('/\s(?=\s)/', '\\1', $schedule);
         $scheduleNodeArr = explode(' ', $schedule);
