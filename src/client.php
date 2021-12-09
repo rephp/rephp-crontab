@@ -15,7 +15,7 @@ use rephp\crontab\query\crontabRunner;
  *      'is_sys_log' => false,//是否开启系统运行日志，选填
  *      'start_time' => '2021-12-08 12:00:00',//必填
  *      'num'        => 4,//运行进程数，选填，默认为1
- *      'status'     => true,//运行状态，选填，默认为暂停。false=暂停，true=执行中
+ *      'status'     => true,//任务状态，选填，默认为真。真=正常状态；假=暂停状态；
  *  ],
  *  [
  *      'desc'     => '每小时的第5分钟执行一次任务',//任务说明,选填
@@ -25,7 +25,7 @@ use rephp\crontab\query\crontabRunner;
  *      'is_sys_log' => true,//是否开启系统运行日志，选填
  *      'start_time' => '2021-12-08 12:00:00',//必填
  *      'num'        => 2,//运行进程数，选填，默认为1
- *      'status'     => true,//运行状态，选填，默认为暂停。false=暂停，true=执行中
+ *      'status'     => true,//任务状态，选填，默认为真。真=正常状态；假=暂停状态；
  *  ]
  * ];
  * $test = new \rephp\crontab\client('/usr/bin/php index.php');
@@ -60,23 +60,6 @@ class client
      * 添加任务到任务列表,可以添加一个或者多个，可以反复调用本接口进行追加任务
      * @param array $taskList 待添加的任务列表
      * @return $this
-     * @example
-     *       [
-     *          [
-     *              'desc'       => '每分钟执行一次测试任务',
-     *              'schedule'   => '* * * * *',
-     *              'command'    => 'test/test2 444 154',
-     *              'log_dir'    => '/var/logs/',
-     *              'is_sys_log' => false,
-     *          ],
-     *          [
-     *              'desc'       => '每小时的第5分钟执行一次任务',
-     *              'schedule'   => '5 * * * *',
-     *              'command'    => 'echo "demo"',
-     *              'log_dir'    => '/var/logs/',
-     *              'is_sys_log' => true,
-     *          ]
-     *      ];
      */
     public function add($taskList)
     {
