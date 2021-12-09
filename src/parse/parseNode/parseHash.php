@@ -13,14 +13,14 @@ class parseHash implements parseScheduleNodeInterface
 
     /**
      * 分析枚举节点是否可以执行, 不允许有频率出现
-     * @param string $scheduleNodeStr  节点字符串
-     * @param int    $currentTimeValue 节点对应当前时间
-     * @param int    $every            频率
-     * @param int    $scheduleNodeInterval  当前节点所经历的时间段间隔
+     * @param string $scheduleNodeStr      节点字符串
+     * @param int    $currentTimeValue     节点对应当前时间
+     * @param int    $every                频率
+     * @param int    $scheduleNodeInterval 当前节点所经历的时间段间隔
      * @return bool
      * @example 1,5,7,9; 1-5,8-10,13-22;
      */
-    public function isDo($scheduleNodeStr, $currentTimeValue, $every = 0, $scheduleNodeInterval=0)
+    public function isDo($scheduleNodeStr, $currentTimeValue, $every = 0, $scheduleNodeInterval = 0)
     {
         if (strpos($scheduleNodeStr, '-') === false) {
             $scheduleTimeArr = explode(',', $scheduleNodeStr);
@@ -28,7 +28,7 @@ class parseHash implements parseScheduleNodeInterface
             $scheduleTimeArr = [];
             $tempArr         = explode(',', $scheduleNodeStr);
             foreach ($tempArr as $str) {
-                if(strpos($str, '-') === false){
+                if (strpos($str, '-') === false) {
                     $scheduleTimeArr[] = $str;
                     continue;
                 }

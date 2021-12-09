@@ -9,8 +9,8 @@ class crontabRunner
 {
     /**
      * 运行批量任务
-     * @param array   $taskList      任务列表
-     * @param string  $baseRunScript 任务前缀，选填，如:/usr/bin/php /www/cmd.php
+     * @param array  $taskList      任务列表
+     * @param string $baseRunScript 任务前缀，选填，如:/usr/bin/php /www/cmd.php
      * @return array
      */
     public static function runTask(array $taskList, $baseRunScript = '')
@@ -22,7 +22,7 @@ class crontabRunner
                 empty($baseRunScript) || $job['command'] = $baseRunScript . ' ' . $job['command'];
                 $isSystemLog = isset($job['is_sys_log']) ? $job['is_sys_log'] : true;
                 $progressNum = empty($job['num']) ? 1 : (int)$job['num'];
-                $progressNum<1 && $progressNum = 1;
+                $progressNum < 1 && $progressNum = 1;
                 $res = self::doShellCommand($job['command'], $job['log_dir'], $isSystemLog, $progressNum);
             }
         } catch (\Exception $e) {
@@ -34,17 +34,17 @@ class crontabRunner
 
     /**
      * 后端执行shell命令
-     * @param string  $command   待执行shell命令
-     * @param string  $logDir    输出日志文件存放的路径
-     * @param boolean $systemLog 是否开启系统运行日志
-     * @param int     $progressNum  运行进程数,不足则补
+     * @param string  $command     待执行shell命令
+     * @param string  $logDir      输出日志文件存放的路径
+     * @param boolean $systemLog   是否开启系统运行日志
+     * @param int     $progressNum 运行进程数,不足则补
      * @return string|false 命令执行失败则返回false，执行成功则返回最后一行命令执行输出内容
      */
-    public static function doShellCommand($command, $logDir = '', $systemLog = true, $progressNum=1)
+    public static function doShellCommand($command, $logDir = '', $systemLog = true, $progressNum = 1)
     {
         $logFile = self::getLogFile($logDir);
         $systemLog && file_put_contents($logFile, '[' . date('Y-m-d H:i:s') . '] 执行: ' . $command . "\n", FILE_APPEND);
-        $fullCommand = 'count=$(ps aux |grep -E "'.$command.'$" | wc -l); if [ $count -lt '.$progressNum.' ]; then for i in $(seq $(expr '.$progressNum.' - $count)); do '.$command.' >> '.$logFile.' 2>&1 & done ;fi';
+        $fullCommand = 'count=$(ps aux |grep -E "' . $command . '$" | wc -l); if [ $count -lt ' . $progressNum . ' ]; then for i in $(seq $(expr ' . $progressNum . ' - $count)); do ' . $command . ' >> ' . $logFile . ' 2>&1 & done ;fi';
 
         return system($fullCommand);
     }

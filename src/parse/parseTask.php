@@ -30,7 +30,7 @@ class parseTask extends baseParse
      * @param int    $startTime 开始执行时间时间戳
      * @return bool
      */
-    protected static function getScheduleIsDo($schedule = '', $startTime=0)
+    protected static function getScheduleIsDo($schedule = '', $startTime = 0)
     {
         $time            = time();
         $interval        = $time - $startTime;
@@ -38,18 +38,18 @@ class parseTask extends baseParse
         $scheduleNodeArr = explode(' ', $schedule);
         $currentTimeArr  = explode('|', date('i|G|j|n|w', time()));
         //循环处理数据
-        $result = true;
+        $result                  = true;
         $indexTimeIntervalConfig = [
             0 => 60,
             1 => 3600,
             2 => 86400,
-            3 => 86400*30,
-            4 => 86400*7,
+            3 => 86400 * 30,
+            4 => 86400 * 7,
         ];
         foreach ($currentTimeArr as $index => $currentTimeNode) {
             //根据时间所在索引，计算间隔值舍弃取整
-            $tempInterval = floor($interval/$indexTimeIntervalConfig[$index]);
-            $result = empty($scheduleNodeArr[$index]) ? false : self::getScheduleNodeIsDo($scheduleNodeArr[$index], $currentTimeNode, $tempInterval);
+            $tempInterval = floor($interval / $indexTimeIntervalConfig[$index]);
+            $result       = empty($scheduleNodeArr[$index]) ? false : self::getScheduleNodeIsDo($scheduleNodeArr[$index], $currentTimeNode, $tempInterval);
             if (!$result) {
                 break;
             }
@@ -65,12 +65,12 @@ class parseTask extends baseParse
      * @param int    $interval         当前节点所代表的时间间隔
      * @return boolean
      */
-    final protected static function getScheduleNodeIsDo($scheduleNodeStr = '', $currentTimeValue = 0, $interval=0)
+    final protected static function getScheduleNodeIsDo($scheduleNodeStr = '', $currentTimeValue = 0, $interval = 0)
     {
         $every = 0;
         strpos($scheduleNodeStr, '/') && list($scheduleNodeStr, $every) = explode('/', $scheduleNodeStr, 2);
         //查找第一个不是数字的符号
-        $scheduleNodeMode = '\\rephp\\crontab\\parse\\parseNode\\'.self::getScheduleNodeMode($scheduleNodeStr);
+        $scheduleNodeMode = '\\rephp\\crontab\\parse\\parseNode\\' . self::getScheduleNodeMode($scheduleNodeStr);
         $logic            = new $scheduleNodeMode();
 
         return $logic->isDo($scheduleNodeStr, $currentTimeValue, $every, $interval);

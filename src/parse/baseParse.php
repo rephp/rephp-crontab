@@ -1,4 +1,5 @@
 <?php
+
 namespace rephp\crontab\parse;
 
 /**
@@ -14,8 +15,8 @@ abstract class baseParse
     final protected static function getScheduleNodeMode($scheduleNodeStr)
     {
         $scheduleNodeStr = str_replace(' ', '', $scheduleNodeStr);
-        $config          = ['*'=>'parseAll', ','=>'parseHash', '-'=>'parseScope'];
-        $checkArr = array_keys($config);
+        $config          = ['*' => 'parseAll', ',' => 'parseHash', '-' => 'parseScope'];
+        $checkArr        = array_keys($config);
         foreach ($checkArr as $checkStr) {
             if (strpos($scheduleNodeStr, $checkStr) !== false) {
                 return $config[$checkStr];
