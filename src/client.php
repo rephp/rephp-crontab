@@ -9,19 +9,19 @@ use rephp\crontab\query\crontabRunner;
  * 计划任务执行客户端
  * $taskList = [
  *  [
+ *      'id'         => 3, //任务编号，必填，用于管理日志
  *      'desc'       => '每分钟执行一次测试任务',//任务说明,选填
  *      'schedule'   => '* * * * *',//执行时间计划,参数说明同linux crontab，必填
  *      'command'    => 'test/test2 444 154',//执行命令,必填
- *      'log_dir'    => 'e:/logs/',//日志存放目录，选填
  *      'is_sys_log' => false,//是否开启系统运行日志，选填
  *      'start_time' => '2021-12-08 12:00:00',//必填
  *      'num'        => 4,//运行进程数，选填，默认为1
  *  ],
  *  [
- *      'desc'     => '每小时的第5分钟执行一次任务',//任务说明,选填
- *      'schedule' => '5 * * * *',//执行时间计划,参数说明同linux crontab，必填
- *      'command'=>'echo "demo"',//执行命令,必填
- *      'log_dir' => 'e:/logs/',//日志存放目录，选填
+ *      'id'         => 4, //任务编号，必填，用于管理日志
+ *      'desc'       => '每小时的第5分钟执行一次任务',//任务说明,选填
+ *      'schedule'   => '5 * * * *',//执行时间计划,参数说明同linux crontab，必填
+ *      'command'    => 'echo "demo"',//执行命令,必填
  *      'is_sys_log' => true,//是否开启系统运行日志，选填
  *      'start_time' => '2021-12-08 12:00:00',//必填
  *      'num'        => 2,//运行进程数，选填，默认为1
@@ -40,18 +40,25 @@ class client
     protected $taskList;
 
     /**
-     * @var string $baseRunScript 基本运行脚本，如/usr/local/php cli
+     * @var string $baseRunScript 基本运行脚本，如/usr/local/php cmd
      */
     protected $baseRunScript;
 
     /**
+     * @var string $logDir 日志目录,如/data/logs/
+     */
+    protected $logDir;
+
+    /**
      * 实例化对象
-     * @param string $baseRunScript
+     * @param string $baseRunScript 公共命令前缀，设置此参数后所有命令将添加此命令前缀
+     * @param string $logDir        日志目录，如/data/logs/,如不设置则不产生日志文件
      * @return void
      */
-    public function __construct($baseRunScript = '')
+    public function __construct($baseRunScript = '', $logDir = '')
     {
         empty($baseRunScript) || $this->baseRunScript = $baseRunScript;
+        empty($logDir) || $this->logDir = $logDir;
     }
 
     /**
@@ -85,6 +92,9 @@ class client
     public function run($taskList = [])
     {
         try {
+            //每分钟执行一次清理历史日志文件
+            self::clearHistoryLog($this->logDir);
+
             //汇总任务列表
             $taskList = empty($taskList) ? $this->taskList : $this->filterTaskList($taskList);
             if (empty($taskList)) {
@@ -96,7 +106,7 @@ class client
                 throw new \Exception('current no task to do', 200);
             }
             //执行任务
-            $result = crontabRunner::runTask($doTaskList, $this->baseRunScript);
+            $result = crontabRunner::runTask($doTaskList, $this->baseRunScript, $this->logDir);
         } catch (\Exception $e) {
             $result = ['code' => $e->getCode(), 'msg' => $e->getMessage()];
         }
@@ -128,6 +138,22 @@ class client
         }
 
         return $result;
+    }
+
+    /**
+     * 清理历史日志文件
+     * @param string $logDir 日志目录
+     * @return false|string
+     */
+    public static function clearHistoryLog($logDir = '')
+    {
+        if (empty($logDir)) {
+            return true;
+        }
+        empty($logDir) && $logDir = '/data/logs/';
+        (in_array(substr($logDir, -1), ['/', '\\'])) || $logDir .= '/';
+        $clearCommand = '/usr/bin/find ' . $logDir . 'crontab_logs/*.log -maxdepth 2 -type f -mtime +7 -delete';
+        return system($clearCommand);
     }
 
 }
