@@ -22,5 +22,4 @@ class parseAll implements parseScheduleNodeInterface
     {
         return empty($every) ? true : ($scheduleNodeInterval % $every == 0);
     }
-
 }

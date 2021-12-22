@@ -75,5 +75,4 @@ class parseTask extends baseParse
 
         return $logic->isDo($scheduleNodeStr, $currentTimeValue, $every, $interval);
     }
-
 }

@@ -58,5 +58,4 @@ class parseScope implements parseScheduleNodeInterface
 
         return $res;
     }
-
 }

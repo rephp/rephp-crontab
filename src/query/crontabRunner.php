@@ -56,7 +56,7 @@ class crontabRunner
      * @param int    $id     任务编号id
      * @return string
      */
-    final static protected function getLogFile($logDir, $id = 0)
+    final protected static function getLogFile($logDir, $id = 0)
     {
         if (empty($logDir)) {
             return '/dev/null';
@@ -75,9 +75,8 @@ class crontabRunner
      * @param string $logFile 日志文件完整文件名
      * @return bool
      */
-    final static protected function createLogDir($logDir)
+    final protected static function createLogDir($logDir)
     {
         return file_exists($logDir) ? true : mkdir($logDir, 0755, true);
     }
-
 }

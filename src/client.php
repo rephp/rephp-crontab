@@ -155,5 +155,4 @@ class client
         $clearCommand = '/usr/bin/find ' . $logDir . 'crontab_logs/*.log -maxdepth 2 -type f -mtime +7 -delete';
         return system($clearCommand);
     }
-
 }

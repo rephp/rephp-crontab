@@ -22,5 +22,4 @@ class parseNumber implements parseScheduleNodeInterface
     {
         return ($currentTimeValue == $scheduleNodeStr);
     }
-
 }

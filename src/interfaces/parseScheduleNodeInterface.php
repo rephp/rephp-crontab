@@ -1,6 +1,7 @@
 <?php
 
 namespace rephp\crontab\interfaces;
+
 /**
  * 解析linux任务执行时间计划节点的接口
  * @package rephp\crontab\interfaces
@@ -16,5 +17,4 @@ interface parseScheduleNodeInterface
      * @return bool
      */
     public function isDo($scheduleNodeStr, $currentTimeValue, $every, $scheduleNodeInterval);
-
 }

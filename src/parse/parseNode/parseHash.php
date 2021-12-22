@@ -40,5 +40,4 @@ class parseHash implements parseScheduleNodeInterface
 
         return in_array($currentTimeValue, $scheduleTimeArr);
     }
-
 }
