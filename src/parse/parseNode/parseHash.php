@@ -10,7 +10,6 @@ use rephp\crontab\interfaces\parseScheduleNodeInterface;
  */
 class parseHash implements parseScheduleNodeInterface
 {
-
     /**
      * 分析枚举节点是否可以执行, 不允许有频率出现
      * @param string $scheduleNodeStr      节点字符串
